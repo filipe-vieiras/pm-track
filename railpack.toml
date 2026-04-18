@@ -1,0 +1,10 @@
+[deploy]
+startCommand = "npm run start"
+
+[[build.steps]]
+name = "install"
+command = "npm ci"
+
+[[build.steps]]
+name = "build"
+command = "npm run build"
