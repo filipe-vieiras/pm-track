@@ -15,36 +15,37 @@ export interface Pillar {
 
 export const PILLARS: Pillar[] = [
   {
-    id: 'ux', icon: '🧍', title: 'Experiência do Usuário',
-    quote: 'Domínio profundo dos usuários, problemas e contexto de uso. Conduzir discovery em parceria com design e outras áreas.',
+    id: 'ux', icon: '🧍', title: 'Estratégia de Experiência e Usuário',
+    quote: 'Domínio profundo das dores e necessidades, garantindo que a solução resolva o problema real com o menor esforço possível.',
     subcategories: [
-      { label: 'Entendimento e contexto a respeito do usuário', questions: [
-        'Conheço e trabalho com personas e segmentos de usuários: quem são, qual o contexto deles, seus objetivos e motivações.',
-        'Mapeo e entendo a jornada do usuário de ponta a ponta (descoberta, ativação, uso recorrente, saída).',
-        'Identifico as principais dores e necessidades por segmento de usuário.',
-        'Sei diferenciar comportamento declarado de comportamento real — o que os usuários falam versus o que de fato fazem.',
+      { label: 'Visão e Empatia pelo Usuário', questions: [
+        'Conheço profundamente quem é o meu usuário, seus objetivos e as dores reais que o trazem ao produto.',
+        'Entendo o contexto de uso (onde, quando e por que ele usa) e como o produto se encaixa na rotina dele.',
+        'Identifico diferentes segmentos e personas, adaptando a proposta de valor para cada um.',
+        'Diferencio o que o usuário "diz querer" do que ele "precisa resolver" (Job to be Done).',
       ]},
-      { label: 'Técnicas de discovery e pesquisa', questions: [
-        'Planejo, conduzo e sintetizo entrevistas com usuários de forma eficaz.',
-        'Utilizo pesquisas quantitativas (surveys, NPS, CES) para complementar o entendimento qualitativo.',
-        'Analiso feedbacks de canais existentes (suporte, NPS, comunidade, redes sociais) como fonte de insight.',
-        'Aplico co-criação com usuários: testes de usabilidade, protótipos e sessões exploratórias.',
+      { label: 'Discovery e Redução de Incerteza', questions: [
+        'Planejo e conduzo descobertas para validar hipóteses antes de levar soluções para desenvolvimento.',
+        'Utilizo métodos qualitativos e quantitativos para extrair insights reais (entrevistas, análise de dados, surveys).',
+        'Envolvo o time (Design e Eng) no processo de descoberta para criar uma visão compartilhada do problema.',
+        'Sintetizo aprendizados de discovery em decisões acionáveis para o roadmap.',
       ]},
-      { label: 'Modelagem e entendimento do problema', questions: [
-        'Formulo hipóteses de problema claras e testáveis.',
-        'Diferencio sintomas de causas raiz de forma consistente.',
-        'Mapeio problemas por impacto (frequência × severidade × oportunidade de negócio).',
-        'Mantenho um backlog de problemas priorizado e visível para o time.',
+      { label: 'Arquitetura de Valor e Fricção', questions: [
+        'Garanto que as soluções propostas são intuitivas e resolvem o problema com o menor esforço (fricção) para o usuário.',
+        'Analiso a jornada de ponta a ponta, identificando gargalos e momentos de abandono.',
+        'Articulo trade-offs de experiência: sei quando simplificar o fluxo para acelerar o aprendizado ou o valor.',
+        'Garanto que o produto comunica claramente o valor e ajuda o usuário a progredir em sua tarefa.',
       ]},
-      { label: 'Experiência de produto e UX aplicada', questions: [
-        'Aplico princípios básicos de UX ao dia a dia (navegação clara, carga cognitiva, feedback ao usuário, acessibilidade mínima).',
-        'Entendo trade-offs de UX em flows críticos e sei articulá-los para o time.',
-        'Consigo ler protótipos e fluxos e fazer perguntas de valor e clareza sem substituir o designer.',
+      { label: 'Colaboração e Design Thinking', questions: [
+        'Atuo como parceiro estratégico do design, definindo o "quê" e o "porquê", enquanto colaboro na visão do "como".',
+        'Promovo uma cultura onde a experiência é responsabilidade de todos, não apenas do designer.',
+        'Utilizo protótipos e experimentos para aprender rápido e evitar desperdício de código em ideias não validadas.',
+        'Avalio propostas de design sob a ótica de viabilidade, negócio e valor para o usuário final.',
       ]},
-      { label: 'Métricas de experiência', questions: [
-        'Conheço e acompanho métricas de UX relevantes (taxa de conclusão, dropout, CSAT, NPS por jornada).',
-        'Conecto insights qualitativos com métricas quantitativas para contar uma história coerente.',
-        'Defino métricas de sucesso por problema ou feature do ponto de vista da experiência.',
+      { label: 'Métricas de Sucesso e Impacto', questions: [
+        'Defino e acompanho indicadores de sucesso baseados no sucesso do usuário (Retenção, CSAT, Conclusão de Tarefa).',
+        'Conecto melhorias na experiência com resultados de negócio (ex: menos fricção aumentando conversão).',
+        'Utilizo dados de uso real (analytics) para identificar onde a experiência precisa ser iterada e melhorada.',
       ]},
     ]
   },

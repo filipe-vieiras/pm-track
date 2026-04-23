@@ -23,16 +23,18 @@ export default function Quiz({ config, setQuizConfig }: Props) {
   const [, navigate] = useLocation();
   const [scores, setScores] = useState<Record<number, number>>({});
   const [currentPillar, setCurrentPillar] = useState(0);
+  const [comments, setComments] = useState("");
   const [showModal, setShowModal] = useState(false);
   const qClient = useQueryClient();
 
   if (!config) { navigate("/"); return null; }
 
   const { mode, pmName, groupId, linkedAssessmentId, evaluatorName } = config;
-  const pillar = PILLARS[currentPillar];
-  const isLast = currentPillar === PILLARS.length - 1;
+  const isCommentsStep = currentPillar === PILLARS.length;
+  const pillar = !isCommentsStep ? PILLARS[currentPillar] : null;
+  const isLast = isCommentsStep;
 
-  const pillarQuestions = allQuestions.filter(q => q.pillarIdx === currentPillar);
+  const pillarQuestions = !isCommentsStep ? allQuestions.filter(q => q.pillarIdx === currentPillar) : [];
   const unanswered = pillarQuestions.filter(q => scores[q.globalIdx] === undefined).length;
   const totalAnswered = Object.keys(scores).length;
   const progressPct = Math.round((totalAnswered / allQuestions.length) * 100);
@@ -83,6 +85,7 @@ export default function Quiz({ config, setQuizConfig }: Props) {
         levelId: level.id,
         levelLabel: level.label,
         pct,
+        comments,
       });
       // Navigate to server-driven result page — no state needed
       setQuizConfig(null);
@@ -102,6 +105,7 @@ export default function Quiz({ config, setQuizConfig }: Props) {
         levelId: level.id,
         levelLabel: level.label,
         pct,
+        comments,
       });
       // Navigate to server-driven eval result — pass the PM's assessmentId
       setQuizConfig(null);
@@ -158,6 +162,18 @@ export default function Quiz({ config, setQuizConfig }: Props) {
               </button>
             );
           })}
+          
+          <button
+            onClick={() => { setCurrentPillar(PILLARS.length); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+            className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-left transition-colors mt-2 ${
+              isCommentsStep ? "bg-primary text-primary-foreground font-medium" : "text-muted-foreground/60"
+            }`}
+          >
+            <span className={`w-2 h-2 rounded-full shrink-0 ${
+              isCommentsStep ? "bg-primary-foreground" : "bg-muted-foreground/30"
+            }`} />
+            💬 Comentários
+          </button>
         </nav>
 
         <div className="mt-auto pt-6 border-t border-border/40">
@@ -179,8 +195,12 @@ export default function Quiz({ config, setQuizConfig }: Props) {
       {/* Main content */}
       <div className="flex-1 flex flex-col min-w-0">
         <header className="border-b border-border/40 px-6 py-3 flex items-center gap-4 sticky top-0 bg-background z-10">
-          <span className="text-xs text-muted-foreground">Pilar {currentPillar + 1}/{PILLARS.length}</span>
-          <span className="font-semibold text-sm">{pillar.icon} {pillar.title}</span>
+          <span className="text-xs text-muted-foreground">
+            {isCommentsStep ? "Finalização" : `Pilar ${currentPillar + 1}/${PILLARS.length}`}
+          </span>
+          <span className="font-semibold text-sm">
+            {isCommentsStep ? "💬 Comentários" : `${pillar?.icon} ${pillar?.title}`}
+          </span>
           <div className="ml-auto flex items-center gap-2">
             <div className="h-1.5 w-24 bg-muted rounded-full overflow-hidden hidden sm:block">
               <div className="h-full bg-primary rounded-full transition-all" style={{ width: `${progressPct}%` }} />
@@ -191,46 +211,78 @@ export default function Quiz({ config, setQuizConfig }: Props) {
 
         <main className="flex-1 px-4 sm:px-8 py-8 max-w-3xl mx-auto w-full">
           <div className="mb-8">
-            <div className="text-xs text-muted-foreground uppercase tracking-widest mb-1">0{currentPillar + 1}</div>
-            <h1 className="text-xl font-bold text-foreground mb-2">{pillar.title}</h1>
-            <p className="text-sm text-muted-foreground italic">{pillar.quote}</p>
+            <div className="text-xs text-muted-foreground uppercase tracking-widest mb-1">
+              {isCommentsStep ? "ETAPA FINAL" : `0${currentPillar + 1}`}
+            </div>
+            <h1 className="text-xl font-bold text-foreground mb-2">
+              {isCommentsStep ? "Considerações Finais" : pillar?.title}
+            </h1>
+            <p className="text-sm text-muted-foreground italic">
+              {isCommentsStep ? "Espaço para feedbacks e sugestões de evolução." : pillar?.quote}
+            </p>
           </div>
 
-          {pillar.subcategories.map(sc => {
-            const scQs = allQuestions.filter(q => q.pillarIdx === currentPillar && q.subcategory === sc.label);
-            return (
-              <div key={sc.label} className="mb-8">
-                <h2 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4 border-b border-border/40 pb-2">{sc.label}</h2>
+          {isCommentsStep ? (
+            <div className="mb-8">
+              <div className="bg-card border border-border rounded-2xl p-6 sm:p-8">
+                <h2 className="text-xl font-bold text-foreground mb-4 flex items-center gap-2">
+                  <span>💬</span> Considerações Finais
+                </h2>
+                <p className="text-sm text-muted-foreground mb-6">
+                  {mode === "pm" 
+                    ? "Opcional: Deixe sugestões de melhoria, pontos que gostaria de desenvolver ou comentários sobre sua autoavaliação."
+                    : `Opcional: Deixe feedbacks específicos e sugestões de evolução para ${pmName}.`}
+                </p>
                 <div className="space-y-4">
-                  {scQs.map(q => {
-                    const cur = scores[q.globalIdx];
-                    return (
-                      <div key={q.globalIdx} className="bg-card border border-border rounded-xl p-5">
-                        <div className="flex items-start gap-3 mb-4">
-                          <p className="text-sm text-foreground leading-relaxed">{q.text}</p>
-                        </div>
-                        <div className="flex gap-2">
-                          {[0,1,2,3,4].map(s => (
-                            <button
-                              key={s}
-                              onClick={() => setScores(prev => ({ ...prev, [q.globalIdx]: s }))}
-                              className={`flex-1 py-2.5 rounded-lg border text-base font-bold transition-all ${
-                                cur === s
-                                  ? "border-primary bg-primary text-primary-foreground"
-                                  : "border-border bg-muted/50 text-muted-foreground hover:border-primary/50 hover:text-foreground"
-                              }`}
-                            >
-                              {s}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    );
-                  })}
+                  <textarea
+                    className="w-full min-h-[200px] bg-muted/30 border border-border rounded-xl p-4 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all resize-none"
+                    placeholder="Escreva aqui suas considerações..."
+                    value={comments}
+                    onChange={(e) => setComments(e.target.value)}
+                  />
+                  <p className="text-[10px] text-muted-foreground italic text-right">
+                    Dica: Seja específico e focado em ações de crescimento.
+                  </p>
                 </div>
               </div>
-            );
-          })}
+            </div>
+          ) : (
+            pillar && pillar.subcategories.map(sc => {
+              const scQs = allQuestions.filter(q => q.pillarIdx === currentPillar && q.subcategory === sc.label);
+              return (
+                <div key={sc.label} className="mb-8">
+                  <h2 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4 border-b border-border/40 pb-2">{sc.label}</h2>
+                  <div className="space-y-4">
+                    {scQs.map(q => {
+                      const cur = scores[q.globalIdx];
+                      return (
+                        <div key={q.globalIdx} className="bg-card border border-border rounded-xl p-5">
+                          <div className="flex items-start gap-3 mb-4">
+                            <p className="text-sm text-foreground leading-relaxed">{q.text}</p>
+                          </div>
+                          <div className="flex gap-2">
+                            {[0,1,2,3,4].map(s => (
+                              <button
+                                key={s}
+                                onClick={() => setScores(prev => ({ ...prev, [q.globalIdx]: s }))}
+                                className={`flex-1 py-2.5 rounded-lg border text-base font-bold transition-all ${
+                                  cur === s
+                                    ? "border-primary bg-primary text-primary-foreground"
+                                    : "border-border bg-muted/50 text-muted-foreground hover:border-primary/50 hover:text-foreground"
+                                }`}
+                              >
+                                {s}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })
+          )}
 
           <div className="flex items-center justify-between mt-8 pt-6 border-t border-border/40">
             <Button variant="ghost" onClick={() => { if (currentPillar > 0) { setCurrentPillar(p => p - 1); window.scrollTo({ top: 0, behavior: "smooth" }); }}} disabled={currentPillar === 0}>

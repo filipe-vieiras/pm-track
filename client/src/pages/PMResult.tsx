@@ -402,12 +402,33 @@ export default function PMResult({ assessmentId }: Props) {
         <div className="flex gap-3 flex-wrap">
           {fromEvaluator ? (
             <Button variant="ghost" onClick={() => navigate(`/evaluator/${evaluatorGroupId}`)} data-testid="btn-back">
-              ← Lista de PMs
+              ← Voltar à lista de PMs
             </Button>
           ) : (
             <Button variant="ghost" onClick={() => navigate("/")} data-testid="btn-back">← Início</Button>
           )}
           <Button variant="outline" onClick={() => window.print()}>Imprimir</Button>
+        </div>
+
+        {/* Comments Section */}
+        <div className="mt-12 space-y-6 print:mt-8">
+          <h2 className="font-semibold text-sm uppercase tracking-widest text-muted-foreground">Considerações e Sugestões</h2>
+
+          <div className="bg-card border border-border rounded-xl p-5">
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">Sua Autoavaliação</p>
+            <div className="text-sm text-foreground italic whitespace-pre-wrap">
+              {assessment.comments || "Nenhum comentário registrado."}
+            </div>
+          </div>
+
+          {evaluation && (
+            <div className="bg-primary/5 border border-primary/20 rounded-xl p-5">
+              <p className="text-xs font-semibold uppercase tracking-wider text-primary mb-3">Visão do Avaliador ({evaluation.evaluatorName})</p>
+              <div className="text-sm text-foreground italic whitespace-pre-wrap">
+                {evaluation.comments || "Nenhum comentário registrado."}
+              </div>
+            </div>
+          )}
         </div>
       </main>
     </div>
