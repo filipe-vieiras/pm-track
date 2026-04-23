@@ -32,6 +32,7 @@ export const assessments = sqliteTable("assessments", {
   levelId: text("level_id").notNull(),
   levelLabel: text("level_label").notNull(),
   pct: real("pct").notNull(),
+  comments: text("comments").notNull().default(""),
 });
 
 export const insertAssessmentSchema = createInsertSchema(assessments);
@@ -50,6 +51,7 @@ export const evaluations = sqliteTable("evaluations", {
   levelId: text("level_id").notNull(),
   levelLabel: text("level_label").notNull(),
   pct: real("pct").notNull(),
+  comments: text("comments").notNull().default(""),
 });
 
 export const insertEvaluationSchema = createInsertSchema(evaluations);

@@ -659,10 +659,36 @@ export default function EvaluatorResult({ assessmentId, viewer = "evaluator" }: 
         )}
 
         <div className="flex gap-3 flex-wrap">
-          <Button variant="ghost" onClick={() => window.history.back()}>
-            ← Voltar
+          <Button
+            variant="ghost"
+            onClick={() => assessment?.groupId ? navigate(`/evaluator/${assessment.groupId}`) : window.history.back()}
+          >
+            ← Voltar à lista de PMs
           </Button>
           <Button variant="outline" onClick={() => window.print()}>Imprimir comparativo</Button>
+        </div>
+
+        {/* Comments Section */}
+        <div className="mt-12 space-y-6 print:mt-8">
+          <h2 className="font-semibold text-sm uppercase tracking-widest text-muted-foreground">Considerações e Sugestões</h2>
+
+          <div className="grid sm:grid-cols-2 gap-6">
+            <div className="bg-card border border-border rounded-xl p-5">
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">Autoavaliação ({assessment.name})</p>
+              <div className="text-sm text-foreground italic whitespace-pre-wrap">
+                {assessment.comments || "Nenhum comentário registrado."}
+              </div>
+            </div>
+
+            {evaluation && (
+              <div className="bg-primary/5 border border-primary/20 rounded-xl p-5">
+                <p className="text-xs font-semibold uppercase tracking-wider text-primary mb-3">Visão do Avaliador ({evaluation.evaluatorName})</p>
+                <div className="text-sm text-foreground italic whitespace-pre-wrap">
+                  {evaluation.comments || "Nenhum comentário registrado."}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </main>
     </div>
